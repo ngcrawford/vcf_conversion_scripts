@@ -2,10 +2,25 @@ import gzip
 from ngs_parsers import VCF
 from collections import OrderedDict
 
+def setup_likelihood_file(fout, vcf):
+
+    l = vcf.empty_vcf_line.keys()[9:]
+    header = [item for sublist in zip(l,l,l) for item in sublist]
+    header = ['I','SID'] + header
+
+    fout = open(fout, 'w')
+    fout.write('\t'.join(header) + "\n")
+    fout.close()
+
+def float_2_decimal(value):
+    return '{:f}'.format(value)
+
+phred_2_pvalue = lambda x: 10**((-1*x)/10)
+
 def convert_PLs_to_likelihoods(vcf_line_dict):
 
     triplets = []
-    phred_2_pvalue = lambda x: 10**((-1*x)/10)
+
 
     for i in vcf_line_dict.items()[9:]:
 
@@ -52,20 +67,6 @@ fin.close()
 vcf = VCF.VCF(input=fin_path)
 
 likelihoods_fout = 'test.liks'
-def setup_likelihood_file(fout, vcf):
-
-    l = vcf.empty_vcf_line.keys()[9:]
-    header = [item for sublist in zip(l,l,l) for item in sublist]
-    header = ['I','SID'] + header
-
-    fout = open(fout, 'w')
-    fout.write('\t'.join(header) + "\n")
-    fout.close()
-
-
-def float_2_decimal(value):
-    return '{:f}'.format(value)
-
 
 setup_likelihood_file(likelihoods_fout, vcf)
 
