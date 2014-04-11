@@ -1,2 +1,3 @@
-test*
 *.ipynb
+*.snp
+*.lik
