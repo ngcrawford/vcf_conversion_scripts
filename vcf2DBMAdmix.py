@@ -1,6 +1,45 @@
 import gzip
+import argparse
 from ngs_parsers import VCF
 from collections import OrderedDict
+
+def get_args():
+    """Parse sys.argv"""
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-i',
+                        '--input',
+                        required=True,
+                        help='Path to VCF file.')
+
+    parser.add_argument('-l',
+                        '--likelihoods-file',
+                        help='Path to output file that contains \
+                        SNV likelihoods.')
+
+    parser.add_argument('-s',
+                        '--SNPs-file',
+                        help='Path to output file that contains \
+                        SNP positions and ids')
+
+    parser.add_argument('-r',
+                        '--region',
+                        default=None,
+                        type=str,
+                        help='chrm:start-stop')
+
+    args = parser.parse_args()
+
+    if args.region is not None:
+        if len(args.region.split(":")) == 2:
+            chrm = [args.region.split(":")[0]]
+            start_stop = [int(item) for item in args.region.split(":")[1].split("-")]
+            args.region = chrm + start_stop
+
+    else:
+        args.region = [args.region]
+
+    return args
 
 def setup_likelihood_file(fout, vcf):
 
