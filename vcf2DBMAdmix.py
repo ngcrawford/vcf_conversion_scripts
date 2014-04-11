@@ -120,6 +120,12 @@ for c, vcf_line_dict in enumerate(vcf.vcf_file_iterator()):
     snp_file_line = ('rs{}'.format(c), chrm_id, vcf_line_dict['POS'],
                       vcf_line_dict['QUAL'], vcf_line_dict['REF'],
                       vcf_line_dict['ALT'])
+        # GATK: SNP Qual is -10 * log(1-p) that a REF/ALT polymorphism exists at this site given sequencing data.
+        # DBM: SNP quality is used to compute the probability that the SNP is a false positive SNP, by formula 10^(-quality / 30).
+
+        # Skip multi allelic sites
+        if len(vcf_line_dict['ALT']) > 1:
+            continue
 
     snps_fout.write("\t".join(map(str, snp_file_line)) + "\n")
 
