@@ -13,9 +13,8 @@
 /Users/testudines/Source/dbm/./dbm \
 /Users/testudines/Code/vcf_conversion_scripts/CAP_MAR.uni_geno.snps.indels.recallibrated
 
-qsub -V -N dbm -pe omp 2 -l h_rt=4:00:00 -b y \
-
-
+qsub -V -N dbm -pe omp 8 -l h_rt=12:00:00 -b y \
+'cd /usr3/graduate/ngcrawfo/genomics/source/dbm; ./dbm CAP_MAR.uni_geno.snps.indels.recallibrated -lik'
 """
 
 import gzip
@@ -107,9 +106,9 @@ def convert_chr_names_to_integer_ids(fin):
 
             Id = l.split(',')[0].split('=')[-1]
 
-            # Skip unincorporated contigs / scaffolds
-            if Id.startswith('A')  or Id.startswith('G'):
-                continue
+            # # Skip unincorporated contigs / scaffolds
+            # if Id.startswith('A')  or Id.startswith('G'):
+            #     continue
 
             chrm_2_id_dict[Id] = 'chr{}'.format(chrm_2_id_counter)
             chrm_2_id_counter +=1
